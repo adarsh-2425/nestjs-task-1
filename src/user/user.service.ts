@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcryptjs';
 import { LoginDto } from 'src/auth/dto/login.dto';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class UserService {
@@ -18,7 +19,7 @@ export class UserService {
         // check if user exists
         const userExists = await this.userModel.findOne({email: newUser.email}); 
 
-        //custome validation mesage for email already exists
+        //custom validation mesage for email already exists
         if (userExists) {
             throw new HttpException(
               'Email already exists. Please log in to your account.',
@@ -33,8 +34,9 @@ export class UserService {
     }
 
     // Login
-    async login(user: LoginDto): Promise<string> {
-        const isUser = this.userModel.findOne({email: user.email});
+    async login(user: LoginDto): Promise<{token: string, user: any}> {
+
+        const isUser = await this.userModel.findOne({email: user.email});
 
         // Email is wrong or user does not exist
         if (!isUser) {
@@ -45,7 +47,7 @@ export class UserService {
         }
 
         // decrypt the password
-        const isPassword = await bcrypt.compare(user.password, (await isUser).password);
+        const isPassword = await bcrypt.compare(user.password, isUser.password);
 
         // if password is wrong
         if (!isPassword) {
@@ -55,6 +57,27 @@ export class UserService {
             )
         }
 
-        return 'login success';
+        // check if it is admin
+        if (isUser.email === process.env.Admin_Email && isPassword === true) {
+                        
+            const payload = {
+                sub: isUser._id,
+                role: 'admin'
+            }
+
+            // Generate JWT token
+            const token = jwt.sign(payload, 'secret');
+            return {token, user: {id: isUser._id, role: 'admin'}}
+        } else {
+            const payload = {
+                sub: isUser._id,
+                role: 'user'
+            }
+
+            // Generate JWT token
+            const token = jwt.sign(payload, 'secret');
+            return {token, user: {id: isUser._id, role: 'user'}
+        }   
+        }
     }
 }
