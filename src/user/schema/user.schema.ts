@@ -12,13 +12,6 @@ export class User {
     @Prop()
     password: string;
 
-    @Prop()
-    user_type: UserType;
-}
-
-enum UserType {
-    ADMIN = "admin",
-    USER = "user"
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
