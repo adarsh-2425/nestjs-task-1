@@ -33,11 +33,28 @@ export class UserService {
     }
 
     // Login
-    async login(user: LoginDto) {
+    async login(user: LoginDto): Promise<string> {
         const isUser = this.userModel.findOne({email: user.email});
 
+        // Email is wrong or user does not exist
         if (!isUser) {
-
+            throw new HttpException(
+                'User Not Found. Please Check Your Credentials or Create an Account',
+                HttpStatus.BAD_REQUEST
+            )
         }
+
+        // decrypt the password
+        const isPassword = await bcrypt.compare(user.password, (await isUser).password);
+
+        // if password is wrong
+        if (!isPassword) {
+            throw new HttpException(
+                'Password is wrong',
+                HttpStatus.BAD_REQUEST
+            )
+        }
+
+        return 'login success';
     }
 }
