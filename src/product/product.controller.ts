@@ -19,6 +19,27 @@ export class ProductController {
     getAllProducts() {
         return this.productService.getAllProducts();
     }
+
+    @Roles('admin')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Get('/test/1')
+    protectedAdminRoute() {
+        return 'Welcome Admin. You now have access to routes protected with role Admin'
+    }
+
+    @Roles('user')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Get('test/2')
+    protectedUserRoute() {
+        return 'Welcome user. You now have access to routes protected with role user'
+    }
+
+    @Roles('admin', 'user')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Get('/test/3')
+    protectedRoute() {
+        return 'Welcome. You now have access to routes protected with role either Admin or User'
+    }
     
     // Update product
 
