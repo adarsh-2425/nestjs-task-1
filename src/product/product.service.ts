@@ -10,12 +10,12 @@ export class ProductService {
     constructor(@InjectModel('Product') private readonly productModel: Model<Product>){}
 
     // View all products
-    async getAllProducts(): Promise<Product[]> {
+    async getProducts(): Promise<Product[]> {
         return await this.productModel.find();
     }
 
     // View One Product by id
-    async getProduct(id: string): Promise<Product> {
+    async getProductById(id: string): Promise<Product> {
         return await this.productModel.findById(id);
     }
 
@@ -27,14 +27,14 @@ export class ProductService {
     }
 
     // Update a Product by Id
-    //not working. fix it. returning empty object
-    async updateProduct(id: string, product: UpdateProductDto): Promise<any> {
-      
-        
+    async updateProduct(id: String, product: Product): Promise<Product> {
+        return this.productModel.findByIdAndUpdate(id, product, { new: true })
       }
-      
 
     // Delete a Product by Id
+    async deleteProduct(id: String): Promise<Product> {
+        return this.productModel.findByIdAndDelete(id)
+      }
 
     
 }

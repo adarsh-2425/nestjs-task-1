@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { ProductDto } from './dto/product.dto';
 import { UpdateProductDto } from './dto/updateProduct.dto';
@@ -11,15 +11,8 @@ import { Roles } from 'src/auth/roles/roles.decorator';
 @Controller('api/product')
 export class ProductController {
     constructor(private readonly productService: ProductService){}
-
-    // Get all Products route
-    @Roles('admin')
-    @UseGuards(JwtAuthGuard, RoleGuard)
-    @Get()
-    getAllProducts() {
-        return this.productService.getAllProducts();
-    }
-
+    
+    // admin protected route testing
     @Roles('admin')
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Get('/test/1')
@@ -27,6 +20,7 @@ export class ProductController {
         return 'Welcome Admin. You now have access to routes protected with role Admin'
     }
 
+    // user protected route testing
     @Roles('user')
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Get('test/2')
@@ -34,6 +28,7 @@ export class ProductController {
         return 'Welcome user. You now have access to routes protected with role user'
     }
 
+    // admin or user protected route testing
     @Roles('admin', 'user')
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Get('/test/3')
@@ -41,18 +36,43 @@ export class ProductController {
         return 'Welcome. You now have access to routes protected with role either Admin or User'
     }
     
-    // Update product
+    // Get all Products route
+    @Roles('admin', 'user')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Get()
+    getProducts() {
+        return this.productService.getProducts();
+    }
 
-    @Put(':id')
-    //@UseGuards(JwtAuthGuard)
-    updateProduct(@Body() product: UpdateProductDto, @Param('id') id: string): any{
-        console.log(product)
-        return this.productService.updateProduct(id, product)
+    // get one product
+    @Get(':id')
+    @Roles('admin', 'user')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    getProductById(@Param('id')id): Promise<Product> {
+        return this.productService.getProductById(id);
     }
 
     // create product
+    @Roles('admin')
+    @UseGuards(JwtAuthGuard, RoleGuard)
     @Post()
     createProduct(@Body() productdto: ProductDto) {
         return this.productService.createProduct(productdto)
+    }
+
+    // Update a Product
+    @Roles('admin')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Put(':id')
+    updateProduct(@Body() productdto: Product, @Param('id') id):Promise<Product> {
+        return this.productService.updateProduct(id, productdto)
+    }
+
+    // Delete a Product
+    @Roles('admin')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Delete(':id')
+    deleteProduct(@Param('id') id): Promise<Product> {
+        return this.productService.deleteProduct(id);
     }
 }
