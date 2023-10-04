@@ -6,6 +6,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ProductModule } from './product/product.module';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from './auth/strategies/jwt.strategy';
 
 @Module({
   imports: [
@@ -14,11 +17,16 @@ import { ProductModule } from './product/product.module';
       isGlobal: true
     }),
     MongooseModule.forRoot(process.env.MONGO_URI),
+    PassportModule,
+    JwtModule.register({ secret: 'secret', signOptions: { expiresIn: '5h' } }),
     UserModule,
     AuthModule,
     ProductModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    JwtStrategy 
+],
 })
 export class AppModule {}

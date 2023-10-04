@@ -3,16 +3,17 @@ import { SignUpDto } from './dto/signup.dto';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 
+
 @Controller('api/auth')
 export class AuthController {
     constructor(private readonly authService: AuthService){}
 
-    @Post('/signup')
+    @Post('signup')
     signup(@Body() signupdto: SignUpDto) {
         return this.authService.signup(signupdto)
     }
 
-    @Post('/login')
+    @Post('login')
     login(@Body() logindto: LoginDto) {
         return this.authService.login(logindto);
     }

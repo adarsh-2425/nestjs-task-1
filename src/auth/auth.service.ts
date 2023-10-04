@@ -4,7 +4,7 @@ import { UserService } from 'src/user/user.service';
 @Injectable()
 export class AuthService {
     constructor(
-        private readonly userService: UserService
+        private readonly userService: UserService,
     ){}
 
     async signup(signupdto) {
@@ -14,4 +14,6 @@ export class AuthService {
     async login(logindto) {
         return this.userService.login(logindto);
     }
+
+    
 }

@@ -1,6 +1,6 @@
 import { IsString, IsNumber, IsNotEmpty } from "class-validator";
 
-export class Product {
+export class ProductDto {
 
     @IsNotEmpty()
     @IsString()
@@ -11,7 +11,7 @@ export class Product {
     description: string;
 
     @IsNotEmpty()
-    @IsString()
+    @IsNumber()
     price: number;
 
     @IsNotEmpty()
