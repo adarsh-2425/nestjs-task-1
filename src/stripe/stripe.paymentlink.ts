@@ -1,4 +1,4 @@
-const stripe = require('stripe')('sk_test_51NgIfeSEO7NjiusZ1PSCGKyDOKPV0IgRztKmEoOis0qyopSgPKFgKss6c5AcrkSgPYfdwhrNYgzIWJcA3dgX3h5I00Q2dsAjvs');
+const stripe = require('stripe')(process.env.secretkey);
 
 export async function createPaymentLink(current_user_id: string, totalAmount: number): Promise<string> {
     const session = await stripe.checkout.sessions.create({
