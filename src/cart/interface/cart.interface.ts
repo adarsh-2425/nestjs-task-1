@@ -1,4 +1,5 @@
 export interface Cart {
-    id: string;
-    items: any[];
+    id?: string;
+    user_id?: string;
+    items?: any[];
 }

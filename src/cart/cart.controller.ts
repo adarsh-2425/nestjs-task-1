@@ -4,7 +4,9 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { RoleGuard } from 'src/auth/role/role.guard';
 import { Roles } from 'src/auth/roles/roles.decorator';
 import { CartService } from './cart.service';
-import { log } from 'console';
+import { CartDto } from './dtos/cart.dto';
+import { UpdateCart } from './interface/updatecart.interface';
+import { UpdateCartDto } from './dtos/updatecart.dto';
 
 @Controller('api/cart')
 export class CartController {
@@ -13,7 +15,7 @@ export class CartController {
     @Post()
     @Roles('user')
     @UseGuards(JwtAuthGuard, RoleGuard)
-    create(@Request() req, @Body() productDetails) {
+    create(@Request() req, @Body() productDetails: CartDto) {
         const user_id = req.user._id;
         return this.cartService.create(user_id, productDetails)
     }
@@ -29,15 +31,29 @@ export class CartController {
     @Put(':id')
     @Roles('user')
     @UseGuards(JwtAuthGuard, RoleGuard)
-    update(@Param('id')cart_id, @Body() updateData):any {
-        return this.cartService.updateCart(cart_id, updateData)
+    update(
+        @Request() req, 
+        @Param('id')cart_id, 
+        @Body() updateData: UpdateCartDto
+        ): Promise<UpdateCart> {
+        const current_user_id = req.user._id;
+        return this.cartService.updateCart(current_user_id, cart_id, updateData)
     }
 
     @Delete(':id')
     @Roles('user')
     @UseGuards(JwtAuthGuard, RoleGuard)
-    delete(@Param('id') id, @Body() body) {
-        return this.cartService.deleteCart(id, body);
+    delete(@Request() req, @Param('id') id, @Body() body) { 
+        const current_user_id = req.user._id;
+        return this.cartService.deleteCart(current_user_id,  id, body);
+    }
+
+    @Get('totalamount/:id')
+    @Roles('user')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    totalAmount(@Request() req, @Param('id') id) {
+        const current_user_id = req.user._id;
+        return this.cartService.calculateTotalAmount(current_user_id, id);
     }
 
 }

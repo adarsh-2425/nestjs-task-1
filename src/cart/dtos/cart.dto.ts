@@ -1,11 +1,8 @@
-import { IsString, IsNotEmpty } from "class-validator";
+import { IsString, IsNotEmpty, IsArray } from "class-validator";
 
 export class CartDto {
-    @IsString()
-    @IsNotEmpty()
-    id: string;
 
-    @IsString()
+    @IsArray()
     @IsNotEmpty()
     items: any[];
 }

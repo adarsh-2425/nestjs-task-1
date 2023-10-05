@@ -14,7 +14,7 @@ export class Product extends Document {
     description: string;
 
     @Prop()
-    price: number;
+    amount: number;
 
     @Prop()
     image_url: string;

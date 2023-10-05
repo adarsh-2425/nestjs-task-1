@@ -12,7 +12,7 @@ export class ProductDto {
 
     @IsNotEmpty()
     @IsNumber()
-    price: number;
+    amount: number;
 
     @IsNotEmpty()
     @IsString()
