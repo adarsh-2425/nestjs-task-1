@@ -20,7 +20,7 @@ export class ProductService {
     }
 
     // Create a Product
-    async createProduct(product: ProductDto, file:any): Promise<any> {
+    async createProduct(product: ProductDto, file:any): Promise<Product> {
         const { name, description, amount } = product;
         const newProduct = new this.productModel({
             name,
