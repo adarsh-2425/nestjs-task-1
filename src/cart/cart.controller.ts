@@ -48,12 +48,4 @@ export class CartController {
         return this.cartService.deleteCart(current_user_id,  id, body);
     }
 
-    @Get('totalamount/:id')
-    @Roles('user')
-    @UseGuards(JwtAuthGuard, RoleGuard)
-    totalAmount(@Request() req, @Param('id') id) {
-        const current_user_id = req.user._id;
-        return this.cartService.calculateTotalAmount(current_user_id, id);
-    }
-
 }

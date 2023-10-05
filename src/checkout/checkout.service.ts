@@ -13,7 +13,7 @@ export class CheckoutService {
     ){}
 
     
-      async checkout(current_user_id: string, cartId: string)  {
+      async checkout(current_user_id: string, cartId: string): Promise<string>  {
 
         const cart = await this.cartModel
           .findOne({ _id: cartId })
@@ -40,7 +40,7 @@ export class CheckoutService {
         }, 0);
   
         //Stripe payment link
-        const paymentLink = await createPaymentLink(current_user_id, totalAmount)
+        const paymentLink = await createPaymentLink(cartId, totalAmount)
 
         const newCheckout = new this.checkoutModel({
             userId: current_user_id,
@@ -53,5 +53,35 @@ export class CheckoutService {
         return paymentLink;
 
       }
+
+      async paymentSuccess(event) {
+        if (event.type === 'checkout.session.completed') {
+            const paymentIntent = event.data.object;
+            const cart_id = paymentIntent.metadata.cartId;
+            // Find the Checkout document by cart_id and update paymentSuccess to true
+          const updatedCheckout = await this.checkoutModel.findOneAndUpdate(
+            { cartId: cart_id },
+            { paymentSuccess: true },
+            { new: true } // Return the updated document
+          );
+
+          console.log('Payment success, updated checkout:', updatedCheckout);
+            
+          }
+      }
+
+      async orderHistory(id) {
+        const user_id = id;
+        const history= await this.checkoutModel.find(
+          {
+            userId: user_id,
+            paymentSuccess: true
+          }
+        )
+
+        return history;
+      }
+
+      
 
 }

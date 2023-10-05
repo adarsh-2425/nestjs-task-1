@@ -33,8 +33,16 @@ export class ProductService {
     }
 
     // Update a Product by Id
-    async updateProduct(id: String, product: Product): Promise<Product> {
-        return this.productModel.findByIdAndUpdate(id, product, { new: true })
+    async updateProduct(id: String, product: Product, file:any): Promise<Product> {
+        const { name, description, amount } = product;
+        const newProduct = {
+            name,
+            description,
+            amount,
+            image_url: file.originalname
+        }
+
+        return this.productModel.findByIdAndUpdate(id, newProduct, { new: true })
       }
 
     // Delete a Product by Id

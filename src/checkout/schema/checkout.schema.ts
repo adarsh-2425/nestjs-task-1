@@ -18,8 +18,6 @@ export class Checkout extends Document {
     @Prop({ default: false })
     paymentSuccess: boolean;
   
-    @Prop()
-    paymentLink: string;
   }
 
   export const CheckoutSchema = SchemaFactory.createForClass(Checkout);

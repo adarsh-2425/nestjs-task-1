@@ -68,9 +68,10 @@ export class ProductController {
     // Update a Product
     @Roles('admin')
     @UseGuards(JwtAuthGuard, RoleGuard)
+    @UseInterceptors(FileInterceptor('file', multerConfig))
     @Put(':id')
-    updateProduct(@Body() productdto: Product, @Param('id') id):Promise<Product> {
-        return this.productService.updateProduct(id, productdto)
+    updateProduct(@UploadedFile() file:any, @Body() productdto: Product, @Param('id') id):Promise<Product> {
+        return this.productService.updateProduct(id, productdto, file)
     }
 
     // Delete a Product

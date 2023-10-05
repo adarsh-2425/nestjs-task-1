@@ -19,10 +19,6 @@ export class CartService {
 
         await newCart.save();
 
-        // Iterate through each item and populate its product_id field
-    for (const item of newCart.items) {
-      await this.cartModel.populate(item, { path: 'product_id', select: 'name amount' });
-    }
 
         return newCart;
       }
@@ -88,38 +84,6 @@ export class CartService {
     return cart;
 
       
-    }
-
-    // Calculate total amount
-    async calculateTotalAmount(current_user_id: string, cartId: string): Promise<any> {
-      const cart = await this.cartModel
-        .findOne({ _id: cartId })
-        .populate('items.product_id', 'name amount');
-  
-      if (!cart) {
-        throw new Error(`Cart with ID ${cartId} not found.`);
-      }
-
-
-      // Check if cart is not found
-      if (!cart) {
-        throw new NotFoundException(`Cart with ID ${cartId} not found.`);
-      }
-
-      // Fetch the cart and check user permission
-      if (cart.user_id.toString() !== current_user_id.toString()) {
-        throw new ForbiddenException('You don\'t have permission to access this cart');
-      }
-  
-      // Calculate the total amount by summing up the amounts of all items
-      const totalAmount = cart.items.reduce((sum, item) => {
-        return sum + item.product_id.amount;
-      }, 0);
-
-      return {
-        current_user_id,
-        totalAmount
-      }
     }
 
 }
