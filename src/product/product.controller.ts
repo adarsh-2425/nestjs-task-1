@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Request } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { ProductDto } from './dto/product.dto';
 import { UpdateProductDto } from './dto/updateProduct.dto';
@@ -7,6 +7,7 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { RoleGuard } from 'src/auth/role/role.guard';
 import { Roles } from 'src/auth/roles/roles.decorator';
+import { request } from 'http';
 
 @Controller('api/product')
 export class ProductController {
@@ -16,7 +17,8 @@ export class ProductController {
     @Roles('admin')
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Get('/test/1')
-    protectedAdminRoute() {
+    protectedAdminRoute(@Request() req) { // @Request() req is for accessing request body
+        console.log(req.user)
         return 'Welcome Admin. You now have access to routes protected with role Admin'
     }
 
