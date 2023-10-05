@@ -91,7 +91,7 @@ export class CartService {
     }
 
     // Calculate total amount
-    async calculateTotalAmount(current_user_id: string, cartId: string): Promise<number> {
+    async calculateTotalAmount(current_user_id: string, cartId: string): Promise<any> {
       const cart = await this.cartModel
         .findOne({ _id: cartId })
         .populate('items.product_id', 'name amount');
@@ -115,8 +115,11 @@ export class CartService {
       const totalAmount = cart.items.reduce((sum, item) => {
         return sum + item.product_id.amount;
       }, 0);
-  
-      return totalAmount;
+
+      return {
+        current_user_id,
+        totalAmount
+      }
     }
 
 }
