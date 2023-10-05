@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Cart } from './interface/cart.interface';
 import { Model } from 'mongoose';
-import { Product } from 'src/product/interface/product.interface';
 import { ForbiddenException, HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
 import { CartDto } from './dtos/cart.dto';
 import { UpdateCart } from './interface/updatecart.interface';
@@ -22,7 +21,7 @@ export class CartService {
 
         // Iterate through each item and populate its product_id field
     for (const item of newCart.items) {
-      await this.cartModel.populate(item, { path: 'product_id', select: 'name price' });
+      await this.cartModel.populate(item, { path: 'product_id', select: 'name amount' });
     }
 
         return newCart;

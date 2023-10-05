@@ -14,7 +14,6 @@ export class ProductDto {
     @IsNumber()
     amount: number;
 
-    @IsNotEmpty()
-    @IsString()
+
     image_url: string;
 }

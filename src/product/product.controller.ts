@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Request } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Request, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { ProductDto } from './dto/product.dto';
 import { UpdateProductDto } from './dto/updateProduct.dto';
@@ -8,6 +8,8 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { RoleGuard } from 'src/auth/role/role.guard';
 import { Roles } from 'src/auth/roles/roles.decorator';
 import { request } from 'http';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerConfig } from '../multer/multer.config'
 
 @Controller('api/product')
 export class ProductController {
@@ -55,11 +57,12 @@ export class ProductController {
     }
 
     // create product
+    @Post()
     @Roles('admin')
     @UseGuards(JwtAuthGuard, RoleGuard)
-    @Post()
-    createProduct(@Body() productdto: ProductDto) {
-        return this.productService.createProduct(productdto)
+    @UseInterceptors(FileInterceptor('file', multerConfig))
+    createProduct(@UploadedFile() file:any, @Body() productdto: ProductDto) {
+        return this.productService.createProduct(productdto, file)
     }
 
     // Update a Product
