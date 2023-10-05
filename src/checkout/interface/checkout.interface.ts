@@ -3,5 +3,4 @@ export interface Checkout {
         cartId: string;
         totalAmount: number;
         paymentSuccess: boolean;
-        paymentLink: string;
 }

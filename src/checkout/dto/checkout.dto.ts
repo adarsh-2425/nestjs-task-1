@@ -4,6 +4,5 @@ export class CreateCheckoutDto {
     readonly cartId: string;
     readonly totalAmount: number;
     readonly paymentSuccess: boolean;
-    readonly paymentLink: string;
   }
   

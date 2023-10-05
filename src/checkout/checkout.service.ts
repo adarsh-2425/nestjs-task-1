@@ -46,12 +46,11 @@ export class CheckoutService {
             userId: current_user_id,
             cartId: cartId,
             totalAmount,
-            paymentLink
         })
 
         await newCheckout.save();
 
-        return newCheckout;
+        return paymentLink;
 
       }
 
